@@ -3,13 +3,13 @@ import { dark } from '@clerk/themes'
 import "./globals.css";
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
+  // SignInButton,
+  // SignUpButton,
+  // SignedIn,
+  // SignedOut,
+  // UserButton,
 } from '@clerk/nextjs'
-import { Button } from "@/components/ui/button";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
     >
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header className="flex justify-end items-center p-2 mt-1 gap-4 h-12 ">
+        {/* <header className="flex justify-end items-center p-2 mt-1 gap-4 h-12 ">
           <SignedOut>
             <SignInButton>
               <Button className='bg-black px-4 py-3 rounded-full'>Sign In</Button>
@@ -47,7 +47,7 @@ export default function RootLayout({ children }) {
           <SignedIn>
             <UserButton />
           </SignedIn>
-        </header>
+        </header> */}
         {children}
       </body>
     </html>
