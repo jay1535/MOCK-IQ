@@ -1,8 +1,9 @@
 "use client"
 import Head from 'next/head';
 import React from 'react'
-
+import { FaInstagram } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa6";
 
 const page = () => {
   return (
@@ -20,32 +21,45 @@ const page = () => {
 
       <main className="min-h-screen">
         {/* Header Section */}
-        <header className="w-full py-8 bg-gray-100 shadow-md">
-          <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-            <h1 className="text-3xl font-bold text-secondary ">Mock-IQ</h1>
+        <header className="w-full py-4 bg-gradient-to-r from-black to-gray-500 my-4 border rounded-xl shadow-md text-white ">
+          <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-2">
+            <h1 className="text-3xl font-bold  ">Mock-IQ</h1>
             <nav className="flex flex-col sm:flex-row flex-wrap items-center justify-between mt-4 md:mt-0 space-y-4 sm:space-y-0 sm:space-x-4">
               
 
-              <div>
+              <div className='flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0'>
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
                   href="https://github.com/jay1535/MOCK-IQ">
-                  <FaGithub className="w-10 h-8" />
+                  <FaGithub className="w-10 h-8 hover:text-green-600" />
+                </a>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www.instagram.com/jayant._.762/?hl=en">
+                <FaInstagram className="w-10 h-8 mx-3 hover:text-pink-600" />
+                </a>
+              <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www.linkedin.com/in/jayant-habbu-12713725a/">
+                <FaLinkedinIn  className="w-10 h-8 hover:text-blue-600" />
                 </a>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0">
-                <a href="#features" className="text-lg text-gray-800 mx-2 md:mx-4">Features</a>
-                <a href="#testimonials" className="text-lg text-gray-800 mx-2 md:mx-4">Testimonials</a>
-                <a href="#contact" className="text-lg text-gray-800 mx-2 md:mx-4">Contact</a>
+             
+                <a href="#features" className="  mx-2 md:mx-4 font-bold text-xl hover:text-blue-600">Features</a>
+                <a href="#testimonials" className="  mx-2 md:mx-4 font-bold text-xl hover:text-blue-600">Testimonials</a>
+              
               </div>
             </nav>
           </div>
         </header>
 
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center text-center py-20 bg-gradient-to-r from-blue-900 to-cyan-500  px-6 md:px-0">
+        <section className=" mx-2 border rounded-xl flex flex-col items-center justify-center text-center py-12 bg-gradient-to-r from-black to-gray-500  px-6 md:px-0">
           <h2 className="text-4xl md:text-5xl font-bold text-white">Ace Your Next Interview</h2>
           <p className="mt-4 text-lg md:text-xl text-white ">Practice with AI-powered mock interviews and get personalized feedback</p>
           <div className="mt-6 flex flex-col md:flex-row">
@@ -57,7 +71,8 @@ const page = () => {
             </a>
             <a
               href="#features"
-              className="px-6 py-3 text-lg font-semibold border border-white rounded-lg hover:bg-white hover:text-black-600"
+              className="px-6 py-3 text-white text-lg font-semibold border border-white rounded-lg
+               hover:bg-white hover:text-gray-800"
             >
               Learn More
             </a>
@@ -100,7 +115,7 @@ const page = () => {
             <h2 className="text-4xl font-bold text-gray-800">What Our Users Say</h2>
             <div className="flex flex-wrap justify-center mt-8">
               <div className="w-full md:w-1/2 px-4 py-8">
-                <div className="bg-white rounded-lg p-6 shadow-md">
+                <div className="bg-gray-300 rounded-lg p-6 shadow-md">
                   <p className="text-gray-600">
                     "The AI mock interviews were incredibly helpful. I felt much more confident going into my real interview."
                   </p>
@@ -108,7 +123,7 @@ const page = () => {
                 </div>
               </div>
               <div className="w-full md:w-1/2 px-4 py-8">
-                <div className="bg-white rounded-lg p-6 shadow-md">
+                <div className="bg-gray-300 rounded-lg p-6 shadow-md">
                   <p className="text-gray-600">
                     "The feedback was spot on and helped me improve my answers. Highly recommend this service!"
                   </p>
