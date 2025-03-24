@@ -9,6 +9,7 @@ import {
   // SignedOut,
   // UserButton,
 } from '@clerk/nextjs'
+import { Toaster } from "@/components/ui/sonner";
 
 
 const geistSans = Geist({
@@ -35,19 +36,7 @@ export default function RootLayout({ children }) {
     >
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* <header className="flex justify-end items-center p-2 mt-1 gap-4 h-12 ">
-          <SignedOut>
-            <SignInButton>
-              <Button className='bg-black px-4 py-3 rounded-full'>Sign In</Button>
-            </SignInButton>
-            <SignUpButton>
-            <Button className='bg-black px-4 py-3 rounded-full'>Sign Up</Button>
-            </SignUpButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </header> */}
+       <Toaster/>
         {children}
       </body>
     </html>
