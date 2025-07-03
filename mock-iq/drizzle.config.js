@@ -4,6 +4,6 @@ export default defineConfig({
   schema: "./utils/schema.js",
   // out: "./drizzle",
   dbCredentials: {
-    url: "postgresql://mock-iq_owner:npg_Svh5sBAo7jRq@ep-young-recipe-a5fjkv4z-pooler.us-east-2.aws.neon.tech/mock-iq?sslmode=require",
+    url: "YOUR_DATABASE_URL",
   }
 });
