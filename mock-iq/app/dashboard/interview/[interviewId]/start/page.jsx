@@ -61,44 +61,55 @@ function StartInterview() {
 
   // ✅ Process speech-to-text results
   useEffect(() => {
-    console.log("Speech-to-Text Results:", results);
-    setUserAnswer(results.map((r) => r.transcript).join(" "));
+    if (results.length > 0) {
+      setUserAnswer(results.map((r) => r.transcript).join(" "));
+    }
   }, [results]);
 
   // ✅ Save answer when recording stops
   useEffect(() => {
     if (!isRecording && userAnswer.length > 10) {
       console.log("Stopping Recording. Saving Answer:", userAnswer);
-      UpdateUserAnswerInDb();
+      UpdateUserAnswerInDb(userAnswer);
     }
-  }, [userAnswer]);
+  }, [isRecording]);
 
-  // ✅ Start/Stop recording
+  // ✅ Start/Stop recording with delay to ensure results update
   const StartStopRecording = async () => {
     if (isRecording) {
       stopSpeechToText();
-      if (userAnswer.length < 10) {
-        toast("Error while saving your answer, please try again");
-        return;
-      }
-      UpdateUserAnswerInDb();
+      
+      setTimeout(() => {
+        const finalAnswer = results.map((r) => r.transcript).join(" ");
+        setUserAnswer(finalAnswer);
+
+        console.log("Final userAnswer before saving:", finalAnswer);
+
+        if (finalAnswer.length < 10) {
+          toast("Error while saving your answer, please try again");
+          return;
+        }
+        UpdateUserAnswerInDb(finalAnswer);
+      }, 1500);
     } else {
+      setUserAnswer(""); // ✅ Clear previous answer
+      setResults([]); // ✅ Reset results array
       startSpeechToText();
     }
   };
 
   // ✅ Save user answer to DB
-  const UpdateUserAnswerInDb = async () => {
+  const UpdateUserAnswerInDb = async (finalUserAnswer) => {
     if (!interviewData || !mockInterviewQuestion[activeQuestionIndex]) return;
 
     setLoading(true);
     const feedbackPrompt =
       `Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}, ` +
-      `User answer: ${userAnswer}. Based on this, provide a rating and feedback.`;
+      `User answer: ${finalUserAnswer}. Based on this, provide a rating and feedback.`;
 
     try {
       const result = await chatSession.sendMessage(feedbackPrompt);
-      const responseText = result.response.text();
+      const responseText = await result.response.text(); // ✅ Fixed async handling
       console.log("AI Response:", responseText);
 
       const cleanedJson = responseText.replace("```json", "").replace("```", "");
@@ -114,7 +125,7 @@ function StartInterview() {
         mockIdRef: interviewData?.mockId,
         question: mockInterviewQuestion[activeQuestionIndex]?.question,
         correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-        userAns: userAnswer,
+        userAns: finalUserAnswer,
         feedback: JsonFeedbackResp?.feedback,
         rating: JsonFeedbackResp?.rating,
       });
@@ -123,15 +134,17 @@ function StartInterview() {
         mockIdRef: interviewData?.mockId,
         question: mockInterviewQuestion[activeQuestionIndex]?.question,
         correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-        userAns: userAnswer,
+        userAns: finalUserAnswer,
         feedback: JsonFeedbackResp?.feedback,
         rating: JsonFeedbackResp?.rating,
       });
 
+      console.log("Database Insert Response:", resp);
+
       if (resp) {
         toast("User answer recorded successfully");
         setUserAnswer("");
-        setResults([]);
+        setResults([]); // ✅ Reset results after saving
       }
     } catch (error) {
       console.error("Error updating user answer:", error);
@@ -171,12 +184,12 @@ function StartInterview() {
           )}
         </Button>
 
-        {/* <Button
+        <Button
           className="border rounded-lg hover:bg-primary text-white mt-2 "
-          onClick={() => console.log(userAnswer)}
+          onClick={() => console.log("User Answer:", userAnswer)}
         >
           Show User Answer
-        </Button> */}
+        </Button>
       </div>
     </div>
   );
