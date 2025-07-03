@@ -39,28 +39,50 @@ function Feedback() {
     fetchData();
   }, [params.interviewId]);
 
-  console.log("Feedback List:", feedbackList); // ✅ Debugging log
+  const getAverageRating = (list) => {
+    const ratings = list
+      .map((fb) => Number(fb.rating))
+      .filter((r) => !isNaN(r));
+
+    if (ratings.length === 0) return "N/A";
+
+    const avg = ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
+    return `${avg.toFixed(1)}/10`;
+  };
 
   return (
     <div className="p-10">
-      <h2 className="text-3xl font-bold text-green-600">Congratulations 🎉!!</h2>
-      <h2 className="font-bold text-2xl">Here is your interview feedback...</h2>
-      <h2 className="text-blue-800 text-lg my-3">
-        Your overall interview rating:
-        <strong className="mx-2">7/10</strong>
+      <h2 className="text-3xl font-bold text-green-600">
+        Congratulations 🎉!!
+      </h2>
+      <h2 className="font-bold text-2xl">
+        Here is your interview feedback...
       </h2>
 
-      {/* ✅ Check if feedbackList contains data */}
+      {feedbackList.length > 0 && (
+        <h2 className="text-blue-800 text-lg my-3">
+          Your overall interview rating:
+          <strong className="mx-2">
+            {getAverageRating(feedbackList)}
+          </strong>
+        </h2>
+      )}
+
       {feedbackList.length > 0 ? (
         feedbackList.map((feedback, index) => (
-          <Collapsible key={index} className="my-3 border border-gray-300 p-3 rounded-lg mt-7">
+          <Collapsible
+            key={index}
+            className="my-3 border border-gray-300 p-3 rounded-lg mt-7"
+          >
             <CollapsibleTrigger className="p-3 bg-gray-100 border border-gray-400 flex rounded-lg justify-between items-center w-full">
-              <span className="text-black font-medium">{feedback?.question || "Question not found"}</span>
+              <span className="text-black font-medium">
+                {feedback?.question || "Question not found"}
+              </span>
               <ChevronsUpDown className="h-5 w-5 text-gray-600" />
             </CollapsibleTrigger>
             <CollapsibleContent>
               <div className="flex flex-col gap-4 p-3">
-                <p className="text-md text-red-500 border p-2 rounded-lg">
+                <p className="text-md text-yellow-700 border p-2 rounded-lg">
                   <strong>Rating:</strong> {feedback.rating || "N/A"}
                 </p>
                 <p className="text-md text-red-900 p-2 border rounded-lg bg-red-50">
@@ -77,11 +99,15 @@ function Feedback() {
           </Collapsible>
         ))
       ) : (
-        <p className="text-gray-500 mt-5">No feedback available for this interview.</p>
+        <p className="text-gray-500 mt-5">
+          No feedback available for this interview.
+        </p>
       )}
 
-      {/* ✅ Button to navigate back to dashboard */}
-      <Button onClick={() => router.replace("/dashboard")} className="mt-5 bg-primary text-white">
+      <Button
+        onClick={() => router.replace("/dashboard")}
+        className="mt-5 bg-primary text-white"
+      >
         Go Home
       </Button>
     </div>
