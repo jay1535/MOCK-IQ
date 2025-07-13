@@ -1,4 +1,5 @@
 "use client"
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -9,31 +10,40 @@ function Header() {
   const path = usePathname();
 
   return (
-    <div className='flex justify-between items-center p-3 rounded-2xl my-1 bg-gray-800 shadow-blue-400 shadow-lg text-white'>
-      <Image src="/logoipsum-363.svg" alt="logo" width={50} height={50} />
-      <ul className='hidden md:flex gap-8'>
+    <nav className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-blue-950 via-blue-800 to-blue-700 shadow-xl shadow-blue-600/50 text-white animate-slide-down">
+      <div className="flex items-center gap-4">
+        <Image src="/logoipsum-363.svg" alt="logo" width={50} height={50} className="hover:rotate-6 transition-transform duration-300" />
+        <span className="text-2xl font-extrabold tracking-wide hover:text-blue-300 transition">Mock-IQ</span>
+      </div>
+
+      <div className="hidden md:flex gap-6 text-lg">
         <Link href="/dashboard">
-          <li
-            className={`select-none focus:outline-none hover:text-blue-700 hover:drop-shadow-[0_0_10px_rgb(59,130,246)] hover:text-lg font-bold transition-all cursor-pointer ${
-              path === '/dashboard' && 'text-cyan-500 font-bold text-lg'
+          <span
+            className={`px-3 py-1 rounded transition-all duration-300 cursor-pointer ${
+              path === '/dashboard'
+                ? 'text-cyan-300 font-semibold'
+                : 'hover:text-blue-300'
             }`}
           >
             Dashboard
-          </li>
+          </span>
         </Link>
         <Link href="/dashboard/how">
-          <li
-            className={`select-none focus:outline-none hover:text-blue-700 hover:drop-shadow-[0_0_10px_rgb(59,130,246)] hover:text-lg font-bold transition-all cursor-pointer ${
-              path === '/dashboard/how' && 'text-cyan-500 font-bold text-lg'
+          <span
+            className={`px-3 py-1 rounded transition-all duration-300 cursor-pointer ${
+              path === '/dashboard/how'
+                ? 'text-cyan-300 font-semibold'
+                : 'hover:text-blue-300'
             }`}
           >
             How it works?
-          </li>
+          </span>
         </Link>
-      </ul>
-      <UserButton />
-    </div>
-  )
+      </div>
+
+      <UserButton afterSignOutUrl='/' />
+    </nav>
+  );
 }
 
 export default Header
