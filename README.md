@@ -88,7 +88,28 @@ After installing dependencies and setting up your `.env.local`, start the develo
 ```bash
 npm run dev
 ```
+## 🤝 Contributing
 
+We welcome contributions to **Mock-IQ**!  
+If you have ideas for improvements, find a bug, or want to add a feature, feel free to open an issue or submit a pull request.  
+
+### 📝 How to Contribute
+
+1️⃣ Fork the repository and clone it to your local machine:  
+```bash
+git clone https://github.com/your-username/MOCK-IQ.git
+cd MOCK-IQ
+```
+### 👥 Authors & Acknowledgments
+
+This project is developed and maintained by:
+
+- **Jayant Habbu** — [@jay1535](https://github.com/jay1535)
+
+Special thanks to:
+
+- The developers of [Next.js](https://nextjs.org/), [Clerk](https://clerk.com/), [shadcn/ui](https://ui.shadcn.com/), [Drizzle ORM](https://orm.drizzle.team/), and [Google Generative AI](https://ai.google/discover/generative-ai/) for providing the amazing tools that power this application.
+- Everyone who has contributed ideas, feedback, and code to improve **Mock-IQ**!
 
 
 
