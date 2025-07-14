@@ -28,6 +28,25 @@ It helps users practice both technical and behavioral interview questions with i
 
 ---
 
+## 📸 Screenshots
+
+### 🏠 Home Page
+![Landing Page](./public/LandingPage.png)
+
+### 🏠 Dashborad
+![Dashboard Page](./public/Dashboard.png)
+
+### 🏠 How It Works?
+![How It Works](./public/HowItWorks.png)
+
+### 🎤 Interview Session
+![Interview Session](./public/Interview.png)
+![Interview Session](./public/Session.png)
+
+### 📊 Results Page
+![Results Page](./public/screenshots/results.png)
+
+
 ## 🛠️ Getting Started
 
 ### 1️⃣ Clone the repository
