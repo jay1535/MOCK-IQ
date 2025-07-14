@@ -31,20 +31,20 @@ It helps users practice both technical and behavioral interview questions with i
 ## 📸 Screenshots
 
 ### 🏠 Home Page
-![Landing Page](./public/LandingPage.png)
+![Landing Page](./mock-iq/public/LandingPage.png)
 
 ### 🏠 Dashborad
-![Dashboard Page](./public/Dashboard.png)
+![Dashboard Page](./mock-iq/public/Dashboard.png)
 
 ### 🏠 How It Works?
-![How It Works](./public/HowItWorks.png)
+![How It Works](./mock-iq/public/HowItWorks.png)
 
 ### 🎤 Interview Session
-![Interview Session](./public/Interview.png)
-![Interview Session](./public/Session.png)
+![Interview Session](./mock-iq/public/Interview.png)
+![Interview Session](./mock-iq/public/Session.png)
 
 ### 📊 Results Page
-![Results Page](./public/screenshots/results.png)
+![Feedback](./mock-iq/public/FeedBack.png)
 
 
 ## 🛠️ Getting Started
