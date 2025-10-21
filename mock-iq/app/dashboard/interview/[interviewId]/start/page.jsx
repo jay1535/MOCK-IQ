@@ -20,6 +20,7 @@ function StartInterview() {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [userAnswer, setUserAnswer] = useState("");
+  const [currentFeedback, setCurrentFeedback] = useState(null);
 
   const {
     isRecording,
@@ -32,10 +33,9 @@ function StartInterview() {
     useLegacyResults: false,
   });
 
-  // ✅ Fetch interview details
+  // Fetch interview questions
   useEffect(() => {
     if (!params.interviewId) return;
-    console.log("Params Interview ID:", params.interviewId);
 
     const GetInterviewDetails = async () => {
       try {
@@ -45,110 +45,91 @@ function StartInterview() {
           .where(eq(MockInterview.mockId, params.interviewId));
 
         if (result.length > 0) {
-          console.log("Raw DB Response:", result);
-          const jsonMockResp = JSON.parse(result[0].jsonMockResp);
-          console.log("Fetched Questions:", jsonMockResp);
+          const jsonMockResp = JSON.parse(result[0].jsonMockResp || "[]");
           setMockInterviewQuestion(jsonMockResp);
           setInterviewData(result[0]);
         }
       } catch (error) {
         console.error("Error fetching interview details:", error);
+        toast("Error fetching interview questions");
       }
     };
 
     GetInterviewDetails();
   }, [params.interviewId]);
 
-  // ✅ Process speech-to-text results
+  // Update user answer as speech is recognized
   useEffect(() => {
-    if (results.length > 0) {
-      setUserAnswer(results.map((r) => r.transcript).join(" "));
-    }
+    setUserAnswer(results.map((r) => r.transcript).join(" "));
   }, [results]);
 
-  // ✅ Save answer when recording stops
+  // Automatically save answer (even empty) when recording stops
   useEffect(() => {
-    if (!isRecording && userAnswer.length > 10) {
-      console.log("Stopping Recording. Saving Answer:", userAnswer);
-      UpdateUserAnswerInDb(userAnswer);
+    if (!isRecording) {
+      SaveUserAnswer(userAnswer);
     }
   }, [isRecording]);
 
-  // ✅ Start/Stop recording with delay to ensure results update
-  const StartStopRecording = async () => {
+  // Start / Stop recording
+  const StartStopRecording = () => {
     if (isRecording) {
       stopSpeechToText();
-      
-      setTimeout(() => {
-        const finalAnswer = results.map((r) => r.transcript).join(" ");
-        setUserAnswer(finalAnswer);
-
-        console.log("Final userAnswer before saving:", finalAnswer);
-
-        if (finalAnswer.length < 10) {
-          toast("Error while saving your answer, please try again");
-          return;
-        }
-        UpdateUserAnswerInDb(finalAnswer);
-      }, 1500);
     } else {
-      setUserAnswer(""); // ✅ Clear previous answer
-      setResults([]); // ✅ Reset results array
+      setUserAnswer("");
+      setResults([]);
       startSpeechToText();
     }
   };
 
-  // ✅ Save user answer to DB
-  const UpdateUserAnswerInDb = async (finalUserAnswer) => {
+  // Save answer & get AI feedback
+  const SaveUserAnswer = async (answer) => {
     if (!interviewData || !mockInterviewQuestion[activeQuestionIndex]) return;
 
     setLoading(true);
-    const feedbackPrompt =
-      `Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}, ` +
-      `User answer: ${finalUserAnswer}. Based on this, provide a rating and feedback.`;
+
+    const questionObj = mockInterviewQuestion[activeQuestionIndex];
+    const feedbackPrompt = `
+      Question: "${questionObj.question}"
+      User answer: "${answer || ''}"
+      Based on this, provide a rating (out of 10) and feedback as a valid JSON object.
+      Example: { "rating": 8, "feedback": "Good answer, but could be more detailed." }
+    `;
 
     try {
       const result = await chatSession.sendMessage(feedbackPrompt);
-      const responseText = await result.response.text(); // ✅ Fixed async handling
-      console.log("AI Response:", responseText);
+      const responseText = await result.response.text();
 
-      const cleanedJson = responseText.replace("```json", "").replace("```", "");
-      let JsonFeedbackResp;
-      try {
-        JsonFeedbackResp = JSON.parse(cleanedJson);
-      } catch (error) {
-        console.error("Error parsing AI response:", error);
-        return toast("AI feedback could not be processed.");
+      // Extract JSON safely
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      let JsonFeedbackResp = { rating: 0, feedback: "No feedback available" };
+      if (jsonMatch) {
+        try {
+          JsonFeedbackResp = JSON.parse(jsonMatch[0]);
+        } catch (err) {
+          console.error("Error parsing AI JSON:", err, responseText);
+        }
       }
 
-      console.log("Saving Answer:", {
-        mockIdRef: interviewData?.mockId,
-        question: mockInterviewQuestion[activeQuestionIndex]?.question,
-        correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-        userAns: finalUserAnswer,
-        feedback: JsonFeedbackResp?.feedback,
-        rating: JsonFeedbackResp?.rating,
+      setCurrentFeedback(JsonFeedbackResp);
+
+      // Save in DB
+      await db.insert(UserAnswer).values({
+        mockIdRef: interviewData.mockId,
+        question: questionObj.question,
+        correctAns: questionObj.answer,
+        userAns: answer || "",
+        feedback: JsonFeedbackResp.feedback || "",
+        rating: JsonFeedbackResp.rating || 0,
       });
 
-      const resp = await db.insert(UserAnswer).values({
-        mockIdRef: interviewData?.mockId,
-        question: mockInterviewQuestion[activeQuestionIndex]?.question,
-        correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-        userAns: finalUserAnswer,
-        feedback: JsonFeedbackResp?.feedback,
-        rating: JsonFeedbackResp?.rating,
-      });
+      toast("Answer saved successfully");
 
-      console.log("Database Insert Response:", resp);
-
-      if (resp) {
-        toast("User answer recorded successfully");
-        setUserAnswer("");
-        setResults([]); // ✅ Reset results after saving
-      }
+      // Reset user answer for next question
+      setUserAnswer("");
+      setResults([]);
     } catch (error) {
-      console.error("Error updating user answer:", error);
-      toast("Error saving answer, please try again");
+      console.error("Error saving user answer:", error);
+      toast("Error saving answer");
     } finally {
       setLoading(false);
     }
@@ -160,12 +141,13 @@ function StartInterview() {
         <QuestionsSection
           mockInterviewQuestion={mockInterviewQuestion}
           activeQuestionIndex={activeQuestionIndex}
+          setActiveQuestionIndex={setActiveQuestionIndex}
+          interviewData={interviewData}
         />
 
         <RecordAnswerSection
-          mockInterviewQuestion={mockInterviewQuestion}
-          activeQuestionIndex={activeQuestionIndex}
-          interviewData={interviewData}
+          userAnswer={userAnswer}
+          currentFeedback={currentFeedback}
         />
 
         <Button
@@ -185,7 +167,7 @@ function StartInterview() {
         </Button>
 
         <Button
-          className="border rounded-lg hover:bg-primary text-white mt-2 "
+          className="border rounded-lg hover:bg-primary text-white mt-2"
           onClick={() => console.log("User Answer:", userAnswer)}
         >
           Show User Answer

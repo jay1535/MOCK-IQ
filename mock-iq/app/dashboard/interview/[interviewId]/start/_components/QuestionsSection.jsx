@@ -1,24 +1,20 @@
-import { Lightbulb, Volume2, ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { useState } from 'react';
-import Link from 'next/link'; // ✅ Import Link for navigation
-import { Button } from '@/components/ui/button'; // ✅ Ensure you import your Button component
+"use client";
+import { Lightbulb, Volume2, ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-function QuestionsSection({ mockInterviewQuestion = [], interviewData }) {
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-
-  const textToSpeech = (text) => {
-    if ('speechSynthesis' in window) {
-      const speech = new SpeechSynthesisUtterance(text);
-      window.speechSynthesis.speak(speech);
-    } else {
-      alert('Sorry, your browser does not support text-to-speech.');
-    }
-  };
-
-  // Handle case where mockInterviewQuestion is empty
+function QuestionsSection({ mockInterviewQuestion = [], interviewData, activeQuestionIndex, setActiveQuestionIndex }) {
   if (!mockInterviewQuestion.length) {
     return <p className="text-center text-gray-500">No questions available.</p>;
   }
+
+  const textToSpeech = (text) => {
+    if ("speechSynthesis" in window) {
+      const speech = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(speech);
+    }
+  };
 
   return (
     <div className="p-5 border rounded-2xl border-primary my-10">
@@ -27,12 +23,12 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData }) {
         {mockInterviewQuestion.map((_, index) => (
           <h2
             key={index}
-            className={`p-2 border rounded-full text-xs md:text-sm text-center cursor-pointer ml-2 mr-2 
-              ${activeQuestionIndex === index 
-                ? 'text-white font-bold border-primary bg-primary' 
-                : 'border-primary'
+            className={`p-2 border rounded-full text-xs md:text-sm text-center cursor-pointer
+              ${activeQuestionIndex === index
+                ? "text-white font-bold border-primary bg-primary"
+                : "border-primary"
               }`}
-            onClick={() => setActiveQuestionIndex(index)} 
+            onClick={() => setActiveQuestionIndex(index)}
           >
             Question #{index + 1}
           </h2>
@@ -41,27 +37,25 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData }) {
 
       {/* Active Question */}
       <h2 className="my-5 text-md md:text-lg mx-2">
-        {mockInterviewQuestion[activeQuestionIndex]?.question || 'No question available'}
+        {mockInterviewQuestion[activeQuestionIndex]?.question || "No question available"}
       </h2>
 
-      {/* Text-to-Speech Button */}
-      <Volume2 
-        className="ml-2 mr-2 cursor-pointer hover:text-primary" 
+      {/* Text-to-Speech */}
+      <Volume2
+        className="ml-2 mr-2 cursor-pointer hover:text-primary"
         onClick={() => textToSpeech(mockInterviewQuestion[activeQuestionIndex]?.question)}
       />
 
-      {/* Navigation Buttons & End Interview */}
+      {/* Navigation */}
       <div className="flex justify-between items-center mt-5">
-        {/* Previous Button */}
-        <button 
+        <button
           className="p-2 px-4 border rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
           onClick={() => setActiveQuestionIndex((prev) => prev - 1)}
-          disabled={activeQuestionIndex === 0} 
+          disabled={activeQuestionIndex === 0}
         >
           <ChevronLeft className="inline-block mr-1" /> Previous
         </button>
 
-        {/* Next Button or End Interview */}
         {activeQuestionIndex === mockInterviewQuestion.length - 1 ? (
           <Link href={`/dashboard/interview/${interviewData?.mockId}/feedback`}>
             <Button className="border hover:bg-primary bg-primary border-primary">
@@ -69,8 +63,8 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData }) {
             </Button>
           </Link>
         ) : (
-          <button 
-            className="p-2 px-4 border rounded-lg bg-primary text-white hover:bg-primary-dark disabled:opacity-50"
+          <button
+            className="p-2 px-4 border rounded-lg bg-primary text-white hover:bg-primary-dark"
             onClick={() => setActiveQuestionIndex((prev) => prev + 1)}
           >
             Next <ChevronRight className="inline-block ml-1" />
@@ -78,14 +72,13 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData }) {
         )}
       </div>
 
-      {/* Note Section */}
+      {/* Note */}
       <div className="border my-3 rounded-2xl p-2 mx-2 mt-5 border-blue-400 bg-blue-200">
         <h2 className="flex gap-2 items-center text-lg text-blue-700">
-          <Lightbulb />
-          <strong>Note:</strong>
+          <Lightbulb /> <strong>Note:</strong>
         </h2>
         <h2 className="text-md text-blue-700 my-2">
-          {process.env.NEXT_PUBLIC_QUESTION_NOTE || 'No note available'}
+          {process.env.NEXT_PUBLIC_QUESTION_NOTE || "No note available"}
         </h2>
       </div>
     </div>

@@ -29,7 +29,7 @@ function Feedback() {
           .where(eq(UserAnswer.mockIdRef, params.interviewId))
           .orderBy(UserAnswer.id);
 
-        console.log("Fetched Feedback Data:", result); // ✅ Debugging log
+        console.log("Fetched Feedback Data:", result);
         setFeedbackList(result);
       } catch (error) {
         console.error("Error fetching feedback:", error);
@@ -62,9 +62,7 @@ function Feedback() {
       {feedbackList.length > 0 && (
         <h2 className="text-blue-800 text-lg my-3">
           Your overall interview rating:
-          <strong className="mx-2">
-            {getAverageRating(feedbackList)}
-          </strong>
+          <strong className="mx-2">{getAverageRating(feedbackList)}</strong>
         </h2>
       )}
 
@@ -82,18 +80,27 @@ function Feedback() {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <div className="flex flex-col gap-4 p-3">
-                <p className="text-md text-yellow-700 border p-2 rounded-lg">
-                  <strong>Rating:</strong> {feedback.rating || "N/A"}
-                </p>
-                <p className="text-md text-red-900 p-2 border rounded-lg bg-red-50">
-                  <strong>Your Answer:</strong> {feedback.userAns || "N/A"}
-                </p>
-                <p className="text-md text-green-900 p-2 border rounded-lg bg-green-50">
-                  <strong>Correct Answer:</strong> {feedback.correctAns || "N/A"}
-                </p>
-                <p className="text-md text-blue-900 p-2 border rounded-lg bg-blue-50">
-                  <strong>Feedback:</strong> {feedback.feedback || "N/A"}
-                </p>
+                <div className="text-md text-yellow-700 border p-2 rounded-lg">
+                  <strong>Rating:</strong> {feedback.rating || "0"}
+                </div>
+
+                <div className="text-md text-red-900 p-3 border rounded-lg bg-red-50">
+                  <strong>Your Answer:</strong>
+                  <pre className="whitespace-pre-wrap mt-1 text-sm text-red-800">
+                    {feedback.userAns || "No Answer Provided"}
+                  </pre>
+                </div>
+
+                <div className="text-md text-green-900 p-3 border rounded-lg bg-green-50">
+                  <strong>Correct Answer:</strong>
+                  <pre className="whitespace-pre-wrap mt-1 text-sm text-green-800">
+                    {feedback.correctAns || "No Answer Available"}
+                  </pre>
+                </div>
+
+                <div className="text-md text-blue-900 p-2 border rounded-lg bg-blue-50">
+                  <strong>Feedback:</strong> {feedback.feedback || "No feedback"}
+                </div>
               </div>
             </CollapsibleContent>
           </Collapsible>

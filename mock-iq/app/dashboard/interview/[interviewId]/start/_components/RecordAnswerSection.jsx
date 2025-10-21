@@ -1,33 +1,25 @@
-"use client"
-import Webcam from 'react-webcam'
-import Image from 'next/image'
-import React from 'react'
-
+"use client";
+import React from "react";
+import Webcam from "react-webcam";
 
 function RecordAnswerSection() {
-
-
   return (
-    
+    <div className="flex flex-col justify-center items-center border-purple-900 border-4
+      bg-gray-800 my-10 rounded-2xl p-5 w-full relative">
       
-    <div className='  flex flex-col justify-center items-center border-purple-900 border-4
-    bg-gray-800 my-10 rounded-2xl p-5 '>
-        <Image src={'/webcam.jpg'} alt='webcam'width={200} height={200}  style={{
-            borderRadius:360
+      <Webcam
+        mirrored={true}
+        style={{
+          height: 400,
+          width: "100%",
+          zIndex: 10,
+          borderRadius: "20px",
         }}
-         className='absolute'/>
-        <Webcam
-          mirrored={true}
-         style={{
-            height:400,
-            width:'100%',
-            zIndex:10
-         
-         }}
-        />      
+      />
+      
+      {/* Removed overlay of user answer and feedback */}
     </div>
-   
-  )
+  );
 }
 
-export default RecordAnswerSection
+export default RecordAnswerSection;
