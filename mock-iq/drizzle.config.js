@@ -4,6 +4,6 @@ export default defineConfig({
   schema: "./utils/schema.js",
   // out: "./drizzle",
   dbCredentials: {
-    url: "YOUR_DATABASE_URL",
+    url:process.env.NEXT_PUBLIC_DRIZZLE_DB_URL,
   }
 });
