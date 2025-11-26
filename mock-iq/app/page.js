@@ -1,282 +1,258 @@
 "use client";
 
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaInstagram, FaGithub } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa6";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
-const Page = () => {
+/* -------------------------------------------------------------------------- */
+/*                               MAIN COMPONENT                               */
+/* -------------------------------------------------------------------------- */
+
+export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  /* --- Header Hide/Show on Scroll --- */
+  const [hideHeader, setHideHeader] = useState(false);
+  const [lastScroll, setLastScroll] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const current = window.scrollY;
+
+      if (current > lastScroll && current > 100) {
+        setHideHeader(true); // hide header
+      } else {
+        setHideHeader(false); // show header
+      }
+
+      setLastScroll(current);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScroll]);
+
   return (
-    <div>
+    <div className="min-h-screen w-full bg-gray-50 text-black relative selection:bg-blue-200">
+
+      {/* SEO */}
       <Head>
-        <title>AI Mock Interview</title>
+        <title>Mock-IQ • AI Mock Interviews</title>
         <meta
           name="description"
-          content="Ace your next interview with AI-powered mock interviews"
+          content="Ace your interviews using AI-powered mock sessions & instant feedback."
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white text-black relative overflow-hidden">
-        {/* Floating blur effects */}
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-0 w-80 h-80 bg-blue-300/20 rounded-full blur-2xl animate-pulse-slow"></div>
+      {/* BACKGROUND ACCENTS */}
+      <div className="absolute -top-24 -left-16 w-80 h-80 bg-blue-900/10 blur-[120px] rounded-full"></div>
+      <div className="absolute top-40 right-0 w-72 h-72 bg-blue-600/10 blur-[120px] rounded-full"></div>
 
-        {/* Header */}
-        <header className="w-full py-5 bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-          <div className="container mx-auto flex justify-between items-center px-6">
-            <h1 className="text-4xl font-black tracking-tight text-blue-700 hover:text-blue-600 transition-transform duration-200 hover:scale-105">
-              Mock-IQ
-            </h1>
+      {/* HEADER */}
+      <header
+        className={`
+          fixed top-0 w-full border-b bg-white/90 backdrop-blur shadow-sm z-50
+          transition-all duration-300
+          ${hideHeader ? "-translate-y-full" : "translate-y-0"}
+        `}
+      >
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-5">
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6 text-lg">
-              <div className="flex gap-4">
-                <a
-                  href="https://github.com/jay1535/MOCK-IQ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-500 transition-transform hover:scale-110"
-                >
-                  <FaGithub className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://www.instagram.com/jayant._.762/?hl=en"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-500 transition-transform hover:scale-110"
-                >
-                  <FaInstagram className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/jayant-habbu-12713725a/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-500 transition-transform hover:scale-110"
-                >
-                  <FaLinkedinIn className="w-6 h-6" />
-                </a>
-              </div>
+          {/* LOGO */}
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-black">
+            Mock<span className="text-blue-700">-IQ</span>
+          </h1>
 
-              <div className="flex gap-6 ml-6">
-                <a
-                  href="#features"
-                  className="hover:text-blue-500 underline-offset-4 hover:underline"
-                >
-                  Features
-                </a>
-                <a
-                  href="#testimonials"
-                  className="hover:text-blue-500 underline-offset-4 hover:underline"
-                >
-                  Testimonials
-                </a>
-              </div>
-            </nav>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-10 text-lg">
+            <a href="#features" className="hover:text-blue-700 transition">Features</a>
+            <a href="#testimonials" className="hover:text-blue-700 transition">Testimonials</a>
 
-            {/* Mobile Menu Icon */}
-            <button
-              className="md:hidden p-2 rounded-md hover:bg-blue-100 transition"
-              onClick={() => setMenuOpen(true)}
-            >
-              <Menu className="w-7 h-7 text-blue-700" />
-            </button>
-          </div>
-
-          {/* Sidebar / Mobile Menu */}
-          {menuOpen && (
-            <div className="fixed inset-0 z-50 bg-black/70 md:hidden flex">
-              <div className="h-full w-80 bg-white text-black p-8 flex flex-col animate-slide-in shadow-2xl">
-                {/* Header Row */}
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-4xl font-extrabold text-blue-700 tracking-tight">
-                    Mock-IQ
-                  </h2>
-                  <button
-                    onClick={() => setMenuOpen(false)}
-                    className="p-2 rounded-full hover:bg-gray-200 transition"
-                  >
-                    <X className="w-6 h-6 text-black" />
-                  </button>
-                </div>
-
-                {/* Nav Links */}
-                <nav className="flex flex-col gap-5">
-                  {[
-                    { label: "Features", href: "#features" },
-                    { label: "Testimonials", href: "#testimonials" },
-                  ].map((item, i) => (
-                    <a
-                      key={i}
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
-                      className="text-2xl font-bold text-gray-800 hover:text-blue-700 transition-all duration-300 transform hover:scale-105 hover:translate-x-2 hover:drop-shadow-md"
-                      style={{ animationDelay: `${i * 150}ms` }}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-                </nav>
-
-                <hr className="border-gray-300 my-8" />
-
-                {/* Social Links */}
-                <div className="flex gap-8 mt-auto">
-                  <a
-                    href="https://github.com/jay1535/MOCK-IQ"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-600 transition-transform hover:scale-125"
-                  >
-                    <FaGithub className="w-8 h-8" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/jayant._.762/?hl=en"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-pink-500 transition-transform hover:scale-125"
-                  >
-                    <FaInstagram className="w-8 h-8" />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/jayant-habbu-12713725a/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-blue-700 transition-transform hover:scale-125"
-                  >
-                    <FaLinkedinIn className="w-8 h-8" />
-                  </a>
-                </div>
-              </div>
+            <div className="flex items-center gap-5 ml-4">
+              <SocialIcon href="https://github.com/jay1535/MOCK-IQ" icon={<FaGithub />} />
+              <SocialIcon href="https://instagram.com/jayant._.762" icon={<FaInstagram />} />
+              <SocialIcon href="https://linkedin.com/in/jayant-habbu-12713725a" icon={<FaLinkedinIn />} />
             </div>
-          )}
-        </header>
+          </nav>
 
-        {/* Hero Section */}
-        <section className="mx-4 my-10 border border-blue-200 rounded-3xl bg-white shadow-xl flex flex-col items-center text-center py-20 px-6 md:px-0 animate-fade-in-up">
-          <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-blue-700 to-black drop-shadow-lg animate-text-glow">
-            Ace Your Interview
-          </h2>
-          <p className="mt-4 text-lg md:text-2xl text-gray-700 italic max-w-2xl animate-fade-in delay-200">
-            Practice with AI-powered mock interviews & get personalized feedback
-            to succeed.
+          {/* Mobile Menu Button */}
+          <button className="md:hidden p-2" onClick={() => setMenuOpen(true)}>
+            <Menu className="w-7 h-7 text-black" />
+          </button>
+        </div>
+
+        {menuOpen && <MobileMenu setMenuOpen={setMenuOpen} />}
+      </header>
+
+      {/* HERO SECTION */}
+      <section className="pt-36 pb-20 px-6 text-center min-h-screen flex flex-col items-center justify-center">
+
+        <h2 className="text-4xl md:text-6xl font-extrabold leading-tight text-black animate-fade-in font-exo">
+          Master Your Interview with Mock<span className="text-blue-700">-IQ</span>
+        </h2>
+
+        <p className="mt-4 text-lg md:text-xl text-gray-600 max-w-xl mx-auto animate-fade-in delay-150 font-exo">
+          Train with realistic AI mock interviews and get powerful feedback on every answer.
+        </p>
+
+        {/* CTA Buttons */}
+        <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 animate-fade-in delay-200">
+          <Link
+            href="/dashboard"
+            className="w-full md:w-auto px-10 py-4 rounded-xl bg-blue-700 text-white text-lg font-semibold shadow hover:scale-[1.03] active:scale-95 transition flex items-center justify-center font-exo"
+          >
+            Start Practicing <ArrowRight className="ml-2" />
+          </Link>
+
+          <a
+            href="#features"
+            className="w-full md:w-auto px-10 py-4 text-lg font-semibold border border-blue-700 text-blue-700 rounded-xl hover:bg-blue-700 hover:text-white transition text-center font-exo"
+          >
+            Learn More
+          </a>
+        </div>
+      </section>
+
+      {/* FEATURES SECTION */}
+      <section id="features" className="py-20 min-h-screen bg-white px-6 border-t flex items-center">
+        <div className="max-w-7xl mx-auto text-center">
+
+          <h3 className="text-3xl md:text-5xl font-extrabold text-black font-exo">
+            Features That Give You an Edge
+          </h3>
+
+          <p className="mt-3 text-gray-600 max-w-xl mx-auto font-exo">
+            Everything you need to level up your interview prep.
           </p>
-          <div className="mt-10 flex flex-col md:flex-row gap-4 animate-fade-in delay-400">
-            <a
-              href="/dashboard"
-              className="px-10 py-4 text-lg font-bold bg-gradient-to-r from-blue-700 to-black text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition"
-            >
-              Get Started
-            </a>
-            <a
-              href="#features"
-              className="px-10 py-4 text-lg font-bold border-2 border-black text-black rounded-full hover:bg-black hover:text-white transform hover:scale-105 transition"
-            >
-              Learn More
-            </a>
-          </div>
-        </section>
 
-        {/* Features */}
-        <section
-          id="features"
-          className="py-20 bg-black text-white px-6 md:px-0 relative overflow-hidden"
-        >
-          <div className="container mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-black text-blue-400 mb-6 animate-fade-in">
-              Features
-            </h2>
-            <p className="text-md md:text-lg text-gray-300 mb-12 max-w-2xl mx-auto animate-fade-in delay-200">
-              Our platform delivers cutting-edge tools to help you prepare better
-              & smarter.
-            </p>
-            <div className="flex flex-wrap justify-center gap-8 animate-fade-in-up delay-300">
-              {[
-                "AI Mock Interviews",
-                "Instant Feedback",
-                "Comprehensive Reports",
-              ].map((feature, i) => (
-                <div
-                  key={i}
-                  className="w-full sm:w-2/3 md:w-1/3 px-4 py-6 transform hover:-translate-y-2 transition duration-300 animate-fade-in-up"
-                  style={{ animationDelay: `${i * 150}ms` }}
-                >
-                  <div className="bg-gray-900 text-white rounded-3xl p-8 shadow-xl hover:shadow-blue-400/30 transition">
-                    <h3 className="text-2xl font-bold text-blue-400 mb-4">
-                      {feature}
-                    </h3>
-                    <p className="text-md text-gray-300">
-                      Explore our {feature.toLowerCase()} for better outcomes.
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-14">
+            <FeatureCard
+              title="AI Mock Interviews"
+              desc="Simulate interviews tailored to your job role."
+            />
+            <FeatureCard
+              title="Instant Smart Feedback"
+              desc="Get detailed insights on clarity, correctness & delivery."
+            />
+            <FeatureCard
+              title="Performance Analytics"
+              desc="Track improvement over time with structured reports."
+            />
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Testimonials */}
-        <section id="testimonials" className="py-20 bg-black px-6 md:px-0">
-          <div className="container mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-black text-blue-400 mb-8 animate-fade-in">
-              What Users Say
-            </h2>
-            <div className="flex flex-wrap justify-center gap-8 animate-fade-in-up delay-300">
-              {[
-                {
-                  text: "The AI mock interviews boosted my confidence before my big day.",
-                  name: "Alex Johnson",
-                },
-                {
-                  text: "The feedback was detailed and actionable. Highly recommended!",
-                  name: "Sarah Williams",
-                },
-              ].map((testimonial, i) => (
-                <div
-                  key={i}
-                  className="w-full md:w-1/2 px-4 py-8 transform hover:-translate-y-2 transition animate-fade-in-up"
-                  style={{ animationDelay: `${i * 150}ms` }}
-                >
-                  <div className="bg-gray-900 text-white rounded-3xl p-8 shadow-md hover:shadow-blue-400/40 transition">
-                    <p className="text-lg italic text-gray-300">
-                      "{testimonial.text}"
-                    </p>
-                    <h4 className="mt-4 text-xl font-bold text-blue-400">
-                      - {testimonial.name}
-                    </h4>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* TESTIMONIALS */}
+      <section id="testimonials" className="py-20 px-6 bg-gray-50 min-h-screen border-y flex items-center">
+        <div className="max-w-6xl mx-auto text-center">
+          <h3 className="text-3xl md:text-5xl font-extrabold text-black font-exo">What Users Say</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-14">
+            <TestimonialCard
+              text="Mock-IQ boosted my confidence before my placement interview. I felt fully prepared!"
+              name="Alex Johnson"
+            />
+            <TestimonialCard
+              text="The AI feedback is incredibly accurate. My answers improved drastically."
+              name="Sarah Williams"
+            />
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <footer className="py-6 bg-black text-blue-400 text-center shadow-inner animate-fade-in">
-        <p>©2025 AI Mock Interview. All rights reserved.</p>
+      {/* FOOTER */}
+      <footer className="py-8 text-center bg-black text-gray-300 font-exo">
+        © {new Date().getFullYear()} Mock-IQ — Built by Jayant
       </footer>
 
-      {/* Animations */}
-      <style jsx global>{`
-        @keyframes slide-in {
-          from {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
+      {/* ANIMATIONS */}
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        .animate-slide-in {
-          animation: slide-in 0.4s ease-out forwards;
+        .animate-fade-in {
+          animation: fade-in 0.6s ease-out both;
         }
+        .delay-150 { animation-delay: 0.15s; }
+        .delay-200 { animation-delay: 0.25s; }
+        .font-exo { font-family: "Exo 2", sans-serif; }
       `}</style>
     </div>
   );
-};
+}
 
-export default Page;
+/* -------------------------------------------------------------------------- */
+/*                           REUSABLE COMPONENTS                              */
+/* -------------------------------------------------------------------------- */
+
+function SocialIcon({ href, icon }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:text-blue-700 transition text-xl"
+    >
+      {icon}
+    </a>
+  );
+}
+
+function FeatureCard({ title, desc }) {
+  return (
+    <div className="bg-gray-50 p-8 rounded-2xl border shadow hover:shadow-xl transition font-exo">
+      <h4 className="text-2xl font-bold text-black">{title}</h4>
+      <p className="mt-3 text-gray-600">{desc}</p>
+    </div>
+  );
+}
+
+function TestimonialCard({ text, name }) {
+  return (
+    <div className="bg-white p-8 rounded-2xl border shadow hover:shadow-xl transition font-exo">
+      <p className="text-lg italic text-gray-800">"{text}"</p>
+      <h4 className="mt-4 text-xl font-bold text-blue-700">- {name}</h4>
+    </div>
+  );
+}
+
+function MobileMenu({ setMenuOpen }) {
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex md:hidden">
+      <div className="w-72 h-full bg-white shadow-xl p-7 animate-slide-in">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-extrabold text-black font-exo">Mock-IQ</h2>
+          <button className="p-2" onClick={() => setMenuOpen(false)}>
+            <X className="w-6 h-6 text-black" />
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-6 text-xl font-semibold font-exo">
+          <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+          <a href="#testimonials" onClick={() => setMenuOpen(false)}>Testimonials</a>
+          <Link href="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</Link>
+        </nav>
+
+        <hr className="my-6" />
+
+        <div className="flex gap-6">
+          <SocialIcon href="https://github.com/jay1535/MOCK-IQ" icon={<FaGithub />} />
+          <SocialIcon href="https://instagram.com/jayant._.762" icon={<FaInstagram />} />
+          <SocialIcon href="https://linkedin.com/in/jayant-habbu-12713725a" icon={<FaLinkedinIn />} />
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes slide-in {
+          from { transform: translateX(-100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-slide-in { animation: slide-in 0.3s ease-out forwards; }
+      `}</style>
+    </div>
+  );
+}

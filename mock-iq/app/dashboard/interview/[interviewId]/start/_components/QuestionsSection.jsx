@@ -1,10 +1,25 @@
 "use client";
 import { Lightbulb, Volume2, ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-function QuestionsSection({ mockInterviewQuestion = [], interviewData, activeQuestionIndex, setActiveQuestionIndex }) {
+function QuestionsSection({
+  mockInterviewQuestion = [],
+  interviewData,
+  activeQuestionIndex,
+  setActiveQuestionIndex,
+}) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect screen size ON CLIENT
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize(); // initial load
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (!mockInterviewQuestion.length) {
     return <p className="text-center text-gray-500">No questions available.</p>;
   }
@@ -17,39 +32,45 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData, activeQue
   };
 
   return (
-    <div className="p-5 border rounded-2xl border-primary my-10">
+    <div className="p-4 md:p-5 border rounded-2xl border-primary my-6 w-full">
+
       {/* Question Number List */}
-      <div className="my-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <div className="my-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-3 overflow-x-auto px-1">
         {mockInterviewQuestion.map((_, index) => (
           <h2
             key={index}
-            className={`p-2 border rounded-full text-xs md:text-sm text-center cursor-pointer
-              ${activeQuestionIndex === index
+            className={`px-3 py-2 border rounded-full text-xs sm:text-sm text-center cursor-pointer whitespace-nowrap
+            ${
+              activeQuestionIndex === index
                 ? "text-white font-bold border-primary bg-primary"
                 : "border-primary"
-              }`}
+            }`}
             onClick={() => setActiveQuestionIndex(index)}
           >
-            Question #{index + 1}
+            {isMobile ? `Q #${index + 1}` : `Question #${index + 1}`}
           </h2>
         ))}
       </div>
 
       {/* Active Question */}
-      <h2 className="my-5 text-md md:text-lg mx-2">
+      <h2 className="my-4 text-sm sm:text-md md:text-lg mx-1 leading-relaxed">
         {mockInterviewQuestion[activeQuestionIndex]?.question || "No question available"}
       </h2>
 
       {/* Text-to-Speech */}
-      <Volume2
-        className="ml-2 mr-2 cursor-pointer hover:text-primary"
-        onClick={() => textToSpeech(mockInterviewQuestion[activeQuestionIndex]?.question)}
-      />
+      <div className="flex items-center mb-3">
+        <Volume2
+          className="cursor-pointer hover:text-primary"
+          onClick={() =>
+            textToSpeech(mockInterviewQuestion[activeQuestionIndex]?.question)
+          }
+        />
+      </div>
 
-      {/* Navigation */}
-      <div className="flex justify-between items-center mt-5">
+      {/* Navigation Buttons */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4">
         <button
-          className="p-2 px-4 border rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
+          className="w-full sm:w-auto p-2 px-4 border rounded-lg bg-gray-300 hover:bg-gray-400 disabled:opacity-50"
           onClick={() => setActiveQuestionIndex((prev) => prev - 1)}
           disabled={activeQuestionIndex === 0}
         >
@@ -57,14 +78,17 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData, activeQue
         </button>
 
         {activeQuestionIndex === mockInterviewQuestion.length - 1 ? (
-          <Link href={`/dashboard/interview/${interviewData?.mockId}/feedback`}>
-            <Button className="border hover:bg-primary bg-primary border-primary">
+          <Link
+            href={`/dashboard/interview/${interviewData?.mockId}/feedback`}
+            className="w-full sm:w-auto"
+          >
+            <Button className="w-full bg-primary border-primary hover:bg-primary">
               End Interview
             </Button>
           </Link>
         ) : (
           <button
-            className="p-2 px-4 border rounded-lg bg-primary text-white hover:bg-primary-dark"
+            className="w-full sm:w-auto p-2 px-4 border rounded-lg bg-primary text-white hover:bg-primary-dark"
             onClick={() => setActiveQuestionIndex((prev) => prev + 1)}
           >
             Next <ChevronRight className="inline-block ml-1" />
@@ -73,11 +97,11 @@ function QuestionsSection({ mockInterviewQuestion = [], interviewData, activeQue
       </div>
 
       {/* Note */}
-      <div className="border my-3 rounded-2xl p-2 mx-2 mt-5 border-blue-400 bg-blue-200">
-        <h2 className="flex gap-2 items-center text-lg text-blue-700">
+      <div className="border my-4 rounded-2xl p-3 mt-5 border-blue-400 bg-blue-200">
+        <h2 className="flex gap-2 items-center text-md sm:text-lg text-blue-700">
           <Lightbulb /> <strong>Note:</strong>
         </h2>
-        <h2 className="text-md text-blue-700 my-2">
+        <h2 className="text-sm sm:text-md text-blue-700 my-2 leading-relaxed">
           {process.env.NEXT_PUBLIC_QUESTION_NOTE || "No note available"}
         </h2>
       </div>

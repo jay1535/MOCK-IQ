@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import { dark } from '@clerk/themes'
 import "./globals.css";
 import {
@@ -12,15 +12,13 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import { Exo_2 } from "next/font/google";
+
+const exo2 = Exo_2({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Mock-IQ : Your Personal Interview Assistant",
@@ -35,7 +33,7 @@ export default function RootLayout({ children }) {
     }}
     >
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={exo2.className}>
        <Toaster/>
         {children}
       </body>
