@@ -7,54 +7,63 @@ import { useRouter } from "next/navigation";
 function InterviewItemCard({ interview }) {
   const router = useRouter();
 
-  const onStart = () => {
-    router.push(`/dashboard/interview/${interview?.mockId}`);
-  };
-
-  const onFeedbackPush = () => {
-    router.push(`/dashboard/interview/${interview?.mockId}/feedback`);
-  };
-
   return (
-    <div className="border shadow-sm rounded-lg p-4 mx-2 my-3">
+    <div
+      className="
+        w-full
+        rounded-xl
+        border
+        bg-white
+        p-5
+        shadow-sm
+        transition-all
+        hover:shadow-md
+        hover:-translate-y-1
+        flex
+        flex-col
+        justify-between
+      "
+    >
+      {/* Content */}
+      <div className="space-y-2">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 break-words">
+          {interview?.jobPosition}
+        </h3>
 
-      {/* Job Position */}
-      <h2 className="font-bold text-secondary text-base sm:text-lg">
-        Job Position : {interview?.jobPosition}
-      </h2>
+        <p className="text-sm text-gray-500">
+          {interview?.jobExperience} years experience
+        </p>
 
-      {/* Experience */}
-      <h2 className="text-sm text-gray-500 mt-1">
-        {interview?.jobExperience} Years of Experience
-      </h2>
+        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+          <span className="font-medium text-gray-700">
+            Description:
+          </span>{" "}
+          {interview?.jobDesc}
+        </p>
+      </div>
 
-      {/* Job Description (wrapped nicely) */}
-      <h2 className="text-sm text-gray-500 mt-1 break-words">
-        Job Description : {interview?.jobDesc}
-      </h2>
-
-      {/* Buttons → responsive */}
-      <div className="flex flex-col sm:flex-row sm:justify-between mt-4 gap-3 sm:gap-5">
-
-        {/* Feedback Button */}
+      {/* Actions */}
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <Button
-          size="sm"
           variant="outline"
-          className="w-full sm:w-1/2 bg-primary text-white hover:border-black border-1"
-          onClick={onFeedbackPush}
+          className="w-full sm:w-1/2"
+          onClick={() =>
+            router.push(
+              `/dashboard/interview/${interview?.mockId}/feedback`
+            )
+          }
         >
           Feedback
         </Button>
 
-        {/* Start Button */}
         <Button
-          size="sm"
-          className="w-full sm:w-1/2 bg-primary text-white hover:bg-gray-200 hover:border-black border-1 hover:text-black"
-          onClick={onStart}
+          className="w-full sm:w-1/2"
+          onClick={() =>
+            router.push(`/dashboard/interview/${interview?.mockId}`)
+          }
         >
           Start
         </Button>
-
       </div>
     </div>
   );

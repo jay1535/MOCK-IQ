@@ -1,4 +1,5 @@
 "use client";
+
 import { Lightbulb, Volume2, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -6,16 +7,15 @@ import { Button } from "@/components/ui/button";
 
 function QuestionsSection({
   mockInterviewQuestion = [],
-  interviewData,
   activeQuestionIndex,
   setActiveQuestionIndex,
 }) {
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect screen size ON CLIENT
+  /* Detect screen size (UI feature) */
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize(); // initial load
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -24,6 +24,7 @@ function QuestionsSection({
     return <p className="text-center text-gray-500">No questions available.</p>;
   }
 
+  /* Text to Speech */
   const textToSpeech = (text) => {
     if ("speechSynthesis" in window) {
       const speech = new SpeechSynthesisUtterance(text);
@@ -54,7 +55,8 @@ function QuestionsSection({
 
       {/* Active Question */}
       <h2 className="my-4 text-sm sm:text-md md:text-lg mx-1 leading-relaxed">
-        {mockInterviewQuestion[activeQuestionIndex]?.question || "No question available"}
+        {mockInterviewQuestion[activeQuestionIndex]?.question ||
+          "No question available"}
       </h2>
 
       {/* Text-to-Speech */}
@@ -62,7 +64,9 @@ function QuestionsSection({
         <Volume2
           className="cursor-pointer hover:text-primary"
           onClick={() =>
-            textToSpeech(mockInterviewQuestion[activeQuestionIndex]?.question)
+            textToSpeech(
+              mockInterviewQuestion[activeQuestionIndex]?.question
+            )
           }
         />
       </div>
@@ -78,10 +82,7 @@ function QuestionsSection({
         </button>
 
         {activeQuestionIndex === mockInterviewQuestion.length - 1 ? (
-          <Link
-            href={`/dashboard/interview/${interviewData?.mockId}/feedback`}
-            className="w-full sm:w-auto"
-          >
+          <Link href="/dashboard" className="w-full sm:w-auto">
             <Button className="w-full bg-primary border-primary hover:bg-primary">
               End Interview
             </Button>

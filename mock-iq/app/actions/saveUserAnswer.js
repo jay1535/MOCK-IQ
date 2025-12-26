@@ -8,10 +8,10 @@ export async function saveUserAnswerAction(payload) {
     await db.insert(UserAnswer).values({
       mockIdRef: payload.mockIdRef,
       question: payload.question,
-      correctAns: payload.correctAns,
-      userAns: payload.userAns,
-      feedback: payload.feedback,
-      rating: payload.rating,
+      correctAns: payload.correctAns ?? "",
+      userAns: payload.userAns ?? "",
+      feedback: payload.feedback ?? "",
+      rating: String(payload.rating ?? "0"),
     });
 
     return { success: true };
